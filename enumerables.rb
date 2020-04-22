@@ -35,7 +35,7 @@ module Enumerable
     my_each do |x|
       return false unless block_given?
 
-      return false unless yield(x)
+      return true unless yield(x)
     end
     true
   end
@@ -96,3 +96,7 @@ module Enumerable
     element
   end
 end
+
+
+p ['d','d'].all?(/d/)
+p [1,1,1].all?(Integer)
