@@ -84,19 +84,18 @@ module Enumerable
     selected
   end
 
-  def my_inject(memo = nil, sym = nil, &prc)
-    memo = memo.to_sym if memo.is_a?(String) && !sym && !prc
-
-    if memo.is_a?(Symbol) && !sym
-      prc = memo.to_proc
-      memo = nil
+  def my_inject(*args, &block)
+    element = nil
+    symbol = nil
+    element = element.to_sym if element.is_a?(String) && !Symbol && !Block
+    if element.is_a?(Symbol) && !symbol
+      block = element.to_proc
+      element = nil
     end
-
-    sym = sym.to_sym if sym.is_a?(String)
-    prc = sym.to_proc if sym.is_a?(Symbol)
-
-    my_each { |elem| memo = memo.nil? ? elem : prc.yield(memo, elem) }
-    memo
+    symbol = symbol.to_sym if symbol.is_a?(String)
+    block = symbol.to_proc if symbol.is_a?(Symbol)
+    my_each { |x| element = element.nil? ? x : block.yield(element, x) }
+    element
   end
 end
 
