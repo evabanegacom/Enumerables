@@ -31,11 +31,14 @@ module Enumerable
     selected_items
   end
 
-  def my_all(*args)
-    my_each do |x|
-      return true unless block_given?
-
-      return false unless yield(x)
+  def my_all?(*array)
+    array = nil
+    if array
+      my_each { |x| return false unless array == x }
+    elsif !block_given?
+      my_each { |x| return false unless x }
+    else
+      my_each { |x| return false unless yield(x) }
     end
     true
   end
@@ -43,27 +46,26 @@ module Enumerable
   def my_any?(*args)
     args = nil
     if args
-      my_each { |x| return false unless x == args }
+      my_each { |x| return true if x == args }
     end
     if !block_given?
       my_each { |x| return true if x }
     else
-      my_each { |x| return true if x == yield(x) }
+      my_each { |x| return false unless x == yield(x) }
     end
     false
   end
 
-  def my_none(*args)
+  def my_none?(*args, &block)
     !my_any?
   end
 
-  def my_count(*arguement)
+  def my_count(arguement = nil)
     counter = 0
-    arguement = nil
     if arguement
       my_each { |x| counter += 1 if x == arguement }
     elsif block_given?
-      my_each { |x| counter += 1 if yield x }
+      my_each { |x| counter += 1 if yield(x) }
     else
       counter = length
     end
@@ -82,20 +84,37 @@ module Enumerable
     selected
   end
 
-  def my_inject(*args, &block)
-    element = nil
-    symbol = nil
-    element = element.to_sym if element.is_a?(String) && !Symbol && !Block
-    if element.is_a?(Symbol) && !symbol
-      block = element.to_proc
-      element = nil
+  def my_inject(memo = nil, sym = nil, &prc)
+    memo = memo.to_sym if memo.is_a?(String) && !sym && !prc
+
+    if memo.is_a?(Symbol) && !sym
+      prc = memo.to_proc
+      memo = nil
     end
-    symbol = symbol.to_sym if symbol.is_a?(String)
-    block = symbol.to_proc if symbol.is_a?(Symbol)
-    my_each { |x| element = element.nil? ? x : block.yield(element, x) }
-    element
+
+    sym = sym.to_sym if sym.is_a?(String)
+    prc = sym.to_proc if sym.is_a?(Symbol)
+
+    my_each { |elem| memo = memo.nil? ? elem : prc.yield(memo, elem) }
+    memo
   end
 end
 
-p ['d','d'].my_all(/d/)
-p [1,1,1].my_all(Integer)
+  def multiply_els(*item)
+    arrays = Array
+    array = arrays(item)
+    array.my_inject { |item1, item2| item1 * item2 }
+  end
+
+array = [false, true, false, nil, []]
+    puts array.my_any? # should print true
+    #puts array.my_all? # should print false
+  #puts array.my_none? # should print false
+  #array = [7,8,9,5,1,0,2,4,0,1]
+p array.my_count(0) == array.count(0) # false
+words = %w[dog door rod blade]
+  # puts words.my_all?(/c/) == words.all?(/c/) # false
+  # puts words.my_any?(/c/) == words.all?(/c/) # false
+  # puts words.my_none?(/c/) == words.all?(/c/) # true
+  array = [1,7,8,89,9,6,5,12,4,2,5]
+  #p array.my_inject(:+) == array.inject(:+) 
