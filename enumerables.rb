@@ -33,9 +33,9 @@ module Enumerable
 
   def my_all(*args)
     my_each do |x|
-      return false unless block_given?
+      return true unless block_given?
 
-      return true unless yield(x)
+      return false unless yield(x)
     end
     true
   end
@@ -97,6 +97,5 @@ module Enumerable
   end
 end
 
-
-p ['d','d'].all?(/d/)
-p [1,1,1].all?(Integer)
+p ['d','d'].my_all(/d/)
+p [1,1,1].my_all(Integer)
