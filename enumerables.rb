@@ -38,7 +38,7 @@ module Enumerable
     elsif !block_given?
       my_each { |x| return false unless x }
     else
-      my_each { |x| return false unless yield(x) }
+      my_each { |x| return false if yield(x) }
     end
     true
   end
@@ -105,15 +105,11 @@ end
     array.my_inject { |item1, item2| item1 * item2 }
   end
 
-array = [false, true, false, nil, []]
-    puts array.my_any? # should print true
-    #puts array.my_all? # should print false
-  #puts array.my_none? # should print false
-  #array = [7,8,9,5,1,0,2,4,0,1]
-p array.my_count(0) == array.count(0) # false
-words = %w[dog door rod blade]
-  # puts words.my_all?(/c/) == words.all?(/c/) # false
-  # puts words.my_any?(/c/) == words.all?(/c/) # false
-  # puts words.my_none?(/c/) == words.all?(/c/) # true
-  array = [1,7,8,89,9,6,5,12,4,2,5]
-  #p array.my_inject(:+) == array.inject(:+) 
+ p  [1, 2, 3, 4].all?{|num| num <= 3} #should return true
+
+ p [1, 'dog', []].all?(Integer) - #should return false
+
+ p ['dog','door','dish'].all?(/o/) - #should return false
+
+
+
