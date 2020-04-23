@@ -31,8 +31,7 @@ module Enumerable
     selected_items
   end
 
-  def my_all?(*array)
-    array = nil
+  def my_all?(array = nil)
     if array
       my_each { |x| return false unless array == x }
     elsif !block_given?
@@ -43,8 +42,7 @@ module Enumerable
     true
   end
 
-  def my_any?(*args)
-    args = nil
+  def my_any?(args = nil)
     if args
       my_each { |x| return true if x == args }
     end
@@ -57,7 +55,7 @@ module Enumerable
   end
 
   def my_none?(*args, &block)
-    !my_any?
+    !my_any?(*args &block)
   end
 
   def my_count(arguement = nil)
@@ -84,10 +82,8 @@ module Enumerable
     selected
   end
 
-  def my_inject(*args, &block)
-    element = nil
-    symbol = nil
-    element = element.to_sym if element.is_a?(String) && !Symbol && !Block
+  def my_inject(element = nil, symbol = nil &block)
+    element = element.to_sym if element.is_a?(String) && !symbol && !block
     if element.is_a?(Symbol) && !symbol
       block = element.to_proc
       element = nil
@@ -98,18 +94,3 @@ module Enumerable
     element
   end
 end
-
-  def multiply_els(*item)
-    arrays = Array
-    array = arrays(item)
-    array.my_inject { |item1, item2| item1 * item2 }
-  end
-
- p  [1, 2, 3, 4].all?{|num| num <= 3} #should return true
-
- p [1, 'dog', []].all?(Integer) - #should return false
-
- p ['dog','door','dish'].all?(/o/) - #should return false
-
-
-
