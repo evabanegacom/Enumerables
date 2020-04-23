@@ -38,7 +38,7 @@ module Enumerable
     elsif !block_given?
       my_each { |x| return false unless x }
     else
-      my_each { |x| return false if yield(x) }
+      my_each { |x| return false unless yield(x) }
     end
     true
   end
@@ -51,7 +51,7 @@ module Enumerable
     if !block_given?
       my_each { |x| return true if x }
     else
-      my_each { |x| return false unless x == yield(x) }
+      my_each { |x| return true if yield(x) }
     end
     false
   end
