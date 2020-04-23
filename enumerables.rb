@@ -44,7 +44,7 @@ module Enumerable
 
   def my_any?(args = nil)
     if args
-      my_each { |x| return true if x == args }
+      my_each { |x| return false unless args == x }
     end
     if !block_given?
       my_each { |x| return true if x }
@@ -54,8 +54,8 @@ module Enumerable
     false
   end
 
-  def my_none?(*args, &block)
-    !my_any?(*args &block)
+  def my_none?(args = nil, &block)
+    !my_any?(args, &block)
   end
 
   def my_count(arguement = nil)
