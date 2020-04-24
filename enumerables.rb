@@ -33,7 +33,7 @@ module Enumerable
 
   def my_all?(array = nil)
     if array
-      my_each { |x| return false unless array == x }
+      my_each { |x| return false unless array includes? x }
     elsif !block_given?
       my_each { |x| return false unless x }
     else
@@ -44,7 +44,7 @@ module Enumerable
 
   def my_any?(args = nil)
     if args
-      my_each { |x| return false unless args == x }
+      my_each { |x| return true if args includes? x }
     end
     if !block_given?
       my_each { |x| return true if x }
@@ -82,7 +82,7 @@ module Enumerable
     selected
   end
 
-  def my_inject(element = nil, symbol = nil &block)
+  def my_inject(element = nil, symbol = nil, &block)
     element = element.to_sym if element.is_a?(String) && !symbol && !block
     if element.is_a?(Symbol) && !symbol
       block = element.to_proc
@@ -93,4 +93,9 @@ module Enumerable
     my_each { |x| element = element.nil? ? x : block.yield(element, x) }
     element
   end
+end
+
+def multiply_els(item)
+  array = Array(item)
+  array.my_inject { |x, y| x * y }
 end
